@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会議報告インフォグラフィック</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .newspaper {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            opacity: 0.3;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .main-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
+            opacity: 0.3;
+        }
+        
+        .main-section h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .main-section p {
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .timeline-section {
+            background: #f0f8ff;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4a90e2;
+        }
+        
+        .timeline-section h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .timeline-section h2::before {
+            content: '⏰';
+            margin-right: 10px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .timeline-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .timeline-number {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .timeline-content h3 {
+            color: #2c3e50;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-content p {
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .priority-section {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .priority-section h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .priority-section h2::before {
+            content: '⭐';
+            margin-right: 10px;
+        }
+        
+        .priority-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #e74c3c;
+            transition: transform 0.3s ease;
+        }
+        
+        .priority-item:hover {
+            transform: translateX(10px);
+        }
+        
+        .priority-item h3 {
+            color: #2c3e50;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+        
+        .priority-item p {
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .analogy-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 30px;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .analogy-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M10,50 Q50,10 90,50 T170,50" stroke="rgba(255,255,255,0.3)" fill="none" stroke-width="2"/></svg>') repeat;
+            opacity: 0.5;
+        }
+        
+        .analogy-section h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .analogy-section h2::before {
+            content: '🚂';
+            margin-right: 10px;
+        }
+        
+        .analogy-section p {
+            color: #34495e;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .footer p {
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .timeline-number {
+                margin: 0 auto 10px;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="newspaper">
+        <div class="header">
+            <h1>📊 会議報告インフォグラフィック</h1>
+            <p class="subtitle">プロジェクト推進会議 - 商品開発から販売戦略まで</p>
+        </div>
+        
+        <div class="content">
+            <div class="main-section">
+                <h2>🎯 全体の流れ</h2>
+                <p>今回の会議では、デザイナーと三橋さんに手分けして商品の図面作成・試作を進め、マーケティングから販売戦略までを確認しました。まずプラレールや各種パーツのサンプルを複数製作し、月別販売数（28〜71個）を分析。その結果を踏まえて、PLAフィラメントの乾燥・温度設定や肉厚調整、組立時に必要な工具（ピンセットなど）を検討し、ホコリ混入対策やメーカーへの確認事項を整理しました。色番号比較やセット販売の有効性、デザインへのオリジナリティ追加案も議論。販売チャネルではメルカリ個人出品／ショップ、Amazon・楽天出店形態を比較検討し、最適化を図ることに。パッケージ・説明書のテンプレート提供と印刷デザインも共有しました。併せて中古パソコンのレンタル・販売事業では、チャットワークグループの立ち上げ、チラシ・Facebook広告の活用事例、レンタル契約時の破損保証金や期間設定などをガイダンス。最後に次回以降のオンライン会議移行方針や、涼しくなる時期を見据えた飯能訪問のスケジュールを調整しました。</p>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-number">28-71</div>
+                        <div class="stat-label">月間販売数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">試作品種類</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">販売チャネル</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">10</div>
+                        <div class="stat-label">議論項目</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-section">
+                <h2>時系列順の要点整理</h2>
+                <div class="timeline-item">
+                    <div class="timeline-number">1</div>
+                    <div class="timeline-content">
+                        <h3>作業分担の決定</h3>
+                        <p>デザイナーと三橋さんで図面作成を並行実施。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">2</div>
+                    <div class="timeline-content">
+                        <h3>サンプル試作と売上分析</h3>
+                        <p>8種類の試作品を用意し、月間販売数データを共有。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">3</div>
+                    <div class="timeline-content">
+                        <h3>組立性・品質検証</h3>
+                        <p>ピンセット要否、フィラメント材質・肉厚調整、ホコリ混入確認。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">4</div>
+                    <div class="timeline-content">
+                        <h3>3Dプリント環境の最適化</h3>
+                        <p>PLA乾燥条件やデュアルヘッドの温度設定を協議。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">5</div>
+                    <div class="timeline-content">
+                        <h3>色・デザイン展開</h3>
+                        <p>色番号比較、セット販売の効果、表面模様追加提案。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">6</div>
+                    <div class="timeline-content">
+                        <h3>販売チャネル選定</h3>
+                        <p>メルカリ個人出品／ショップ、Amazon・楽天での出店形態比較。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">7</div>
+                    <div class="timeline-content">
+                        <h3>パッケージ・説明書検討</h3>
+                        <p>印刷テンプレート作成、挨拶文書の要否、梱包スタイル案共有。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">8</div>
+                    <div class="timeline-content">
+                        <h3>中古PC事業ガイダンス</h3>
+                        <p>チャットワークグループ設立、チラシ・Facebook広告活用事例。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">9</div>
+                    <div class="timeline-content">
+                        <h3>契約条件・価格設定</h3>
+                        <p>破損時保証金、レンタル期間設定、プラン価格を説明。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">10</div>
+                    <div class="timeline-content">
+                        <h3>次回施策と訪問計画</h3>
+                        <p>オンライン移行方針、飯能現地訪問の候補日程調整。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="priority-section">
+                <h2>重要度順の要点整理</h2>
+                <div class="priority-item">
+                    <h3>パーツ試作と販売数分析</h3>
+                    <p>市場データに基づき優先サンプルを決定し、開発ロードマップを策定。</p>
+                </div>
+                
+                <div class="priority-item">
+                    <h3>組立性・品質向上策</h3>
+                    <p>必要工具や材質調整、ホコリ対策を盛り込んで顧客満足度を確保。</p>
+                </div>
+                
+                <div class="priority-item">
+                    <h3>販売チャネル最適化</h3>
+                    <p>メルカリ／Amazon／楽天の出品形態を比較し、手間と収益性を両立。</p>
+                </div>
+                
+                <div class="priority-item">
+                    <h3>色・デザイン差別化</h3>
+                    <p>色展開と表面模様で他社製品との差別化を図る。</p>
+                </div>
+                
+                <div class="priority-item">
+                    <h3>3Dプリント環境調整</h3>
+                    <p>フィラメント乾燥や高温対応ヘッドで一貫した品質を実現。</p>
+                </div>
+                
+                <div class="priority-item">
+                    <h3>パッケージ・説明書整備</h3>
+                    <p>テンプレートと簡潔マニュアルで顧客利便性を向上。</p>
+                </div>
+                
+                <div class="priority-item">
+                    <h3>中古PCレンタル事業推進</h3>
+                    <p>チャットワーク連携とチラシ広告でリード獲得体制を整備。</p>
+                </div>
+                
+                <div class="priority-item">
+                    <h3>契約条件設定</h3>
+                    <p>破損保証金込みプランで安心感をアピール。</p>
+                </div>
+                
+                <div class="priority-item">
+                    <h3>オンライン会議移行</h3>
+                    <p>コミュニケーション効率化を見据えた進行方法を検討。</p>
+                </div>
+                
+                <div class="priority-item">
+                    <h3>現地訪問計画</h3>
+                    <p>気候や業務状況を考慮し、最適な日程でフォロー訪問を計画。</p>
+                </div>
+            </div>
+            
+            <div class="analogy-section">
+                <h2>例え話と感想</h2>
+                <p>今回の打ち合わせは、まるで多彩なレールと車両を最適に組み合わせて走らせる鉄道会社の運行会議のようでした。各種パーツをサンプル列車に見立て、売れ行きに応じて増結や車両改良を検討し、最終的に路線（販売チャネル）ごとのダイヤや編成（色・セット展開）を決定する…そんな緻密さと機動性が感じられました。参加者全員が「顧客目線で車窓を楽しんでもらうにはどうすべきか？」を常に問い続けており、プロジェクトへの熱意と具体的なアクションプランが、まさに正確無比なレールを敷き進めるようです。このまま計画通りに運行すれば、次の走行（販売）では大きな成果が期待できると感じました。</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>📈 プロジェクト推進会議報告書 - 2025年7月18日作成</p>
+        </div>
+    </div>
+</body>
+</html>
